@@ -1,0 +1,181 @@
+--Create tables--
+CREATE TABLE Customer(
+	custId CHAR(4) NOT NULL,
+    	fName VARCHAR(50) NOT NULL DEFAULT '',
+    	lName VARCHAR(50) NOT NULL DEFAULT '',
+	age INT,
+	sex CHAR(1) NOT NULL,
+	phone CHAR(14) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	PRIMARY KEY (custId)
+);
+
+CREATE TABLE CustomerOrder(
+	orderId VARCHAR(10) NOT NULL,
+	custId CHAR(4) NOT NULL,
+	payMethod VARCHAR(30) NOT NULL,
+	orderDate DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (orderId),
+	FOREIGN KEY (custId)
+		REFERENCES Customer(custId)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Hotel(
+	hotelCode VARCHAR(8) NOT NULL,
+	hotelName VARCHAR(50) NOT NULL DEFAULT '',
+	street VARCHAR(50) NOT NULL DEFAULT '',
+    city VARCHAR(20) NOT NULL DEFAULT '',
+	country VARCHAR(20) NOT NULL DEFAULT '',
+	PRIMARY KEY (hotelCode)
+);
+
+CREATE TABLE Flight(
+	flightNo VARCHAR(10) NOT NULL,
+	airline VARCHAR(50) NOT NULL DEFAULT '',
+        FromTo VARCHAR(20) NOT NULL DEFAULT '',
+	PRIMARY KEY (flightNo)
+);
+
+CREATE TABLE Package(
+	packageNo CHAR(1) NOT NULL,
+	flightNO VARCHAR(10) NOT NULL,
+	hotelCode VARCHAR(10) NOT NULL,
+	destination VARCHAR(20) NOT NULL DEFAULT '',
+	tCost INT NOT NULL,
+	PRIMARY KEY (packageNo),
+	FOREIGN KEY (flightNo)
+		REFERENCES Flight (flightNo)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (hotelCode)
+		REFERENCES Hotel (hotelCode)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE OrderItem(
+	orderId VARCHAR(10) NOT NULL,
+	packageNo CHAR(1) NOT NULL,
+	FOREIGN KEY (orderId)
+		REFERENCES CustomerOrder(orderId)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (packageNo)
+		REFERENCES Package (packageNo)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+--Insert Data--
+  INSERT INTO Hotel(hotelCode,hotelName,street,city,country)
+  VALUES ('USLA13','The Hoxton Downtown','1060 South Broadway','Los Angeles','United States'),
+  		 ('UKLN7','Royal Garden','2-24 Kensington High Street','London','England'),
+		 ('JPTK21','Keio Plaza Hotel','2-2-1 Nishi-Shinjuku','Tokyo','Japan'),
+		 ('CNSH9','Four Seasons Hotel','210 Century Avenue','Shanghai','China'),
+		 ('AUSY11','Shangri-La Hotel','176 Cumberland St','Sydney','Australia');
+
+  INSERT INTO Flight(flightNo, airline, FromTo)
+  VALUES ('AC550','Air Canada','YVR-LAX'),
+  		('BA84','British Airways','YVR-LHR'),
+		('AC3','Air Canada','YVR-NRT'),
+		('NH115','All Nippon Airways','YVR-NRT'),
+		('AC24','Air Canada','YVR-PVG'),
+		('AC33','Air Canada','YVR-SYD');
+
+  INSERT INTO Package(packageNo,flightNo,hotelCode,destination,tCost)
+  VALUES ('A','AC550','USLA13','LA, United States','399'),
+  		('B','BA84','UKLN07','London, England','912'),
+		('C','AC3','JPTK21','Tokyo, Japan','1259'),
+		('D','NH115','JPTK21','Tokyo, Japan','1120'),
+		('E','AC24','CNSH09','Shanghai, China','1320'),
+		('F','AC33','AUSY11','Sydney, Australia','1399');
+
+ INSERT INTO Customer(custId,fName,lName,age,sex,phone,email)
+  VALUES ('6145','Gare','Whittick','56','M','771-812-2403','gwhittick0@archive.org'),
+  		('3729','Elysee','Benard','32','F','358-781-1709','ebenard1@imageshack.us'),
+		('5468','Marcelo','Ayce','40','M','575-775-4630','mayce2@amazonaws.com'),
+		('4815','Araldo','Wishkar','18','M','825-754-2710','awishkarj@360.cn'),
+		('3353','Travus','Dinwoodie','68','M','118-606-8258','tdinwoodie3@whitehouse.gov'),
+		('7559','Dicky','Strewther','33','M','245-208-6311','dstrewther4@umich.edu'),
+		('2378','Clemens','Maclaine','58','M','693-655-2603','cmaclaine5@usatoday.com'),
+		('9597','Joell','Haspineall','29','F','642-776-3213','jhaspineall6@sitemeter.com'),
+		('9253','Tabbie','Brito','30','F','179-272-4247','tbrito7@opensource.org'),
+		('8583','Nestor','Attoe','28','M','644-240-1549','nattoe8@springer.com'),
+		('2888','Shawnee','Cottier','52','F','463-989-3342','scottier9@naver.com'),
+		('8495','Arluene','Cosford','56','F','321-505-2888','acosforda@cmu.edu'),
+		('4994','Scotti','Dreghorn','48','M','956-115-8360','sdreghornb@reddit.com'),
+		('1877','Carlyn','Crisford','50','F','997-682-3810','ccrisfordc@wordpress.org'),
+		('7089','Natalee','Sleigh','38','F','304-627-8241','nsleighd@google.co.uk'),
+		('7892','Sammy','Speaks','79','M','948-369-2679','sspeakse@japanpost.jp'),
+		('6318','Joseito','Gilbart','45','M','425-759-9104','jgilbartf@fotki.com'),
+		('1846','Norrie','Hurcombe','69','M','789-942-5381','nhurcombeg@jimdo.com'),
+		('8857','Philip','Kilner','27','M','591-390-6805','pkilnerh@t.com'),
+		('2001','Kenn','Howsam','39','M','782-216-7782','khowsami@mozilla.com');
+
+  INSERT INTO CustomerOrder(orderId,custId,payMethod,orderDate)
+    VALUES ('0061117','5468','cash','1/10/2019'),
+		   ('0076311','4815','interac debit','2/3/2019'),
+		   ('0534551','9253','mastercard','2/20/2019'),
+		   ('1147979','3729','visa','3/8/2019'),
+		   ('2494089','7559','cash','3/29/2019'),
+		   ('2980816','2001','visa','4/1/2019'),
+		   ('3678087','7892','mastercard','4/15/2019'),
+		   ('3721651','4994','interac debit','7/5/2019'),
+		   ('5611515','1846','paypal','7/7/2019'),
+		   ('6600756','6318','visa','7/7/2019'),
+		   ('7628656','7089','interac debit','8/16/2019'),
+		   ('8118492','2378','mastercard','8/27/2019'),
+		   ('8314702','5468','cash','8/29/2019'),
+		   ('8523465','8495','paypal','9/4/2019'),
+		   ('8818232','8583','visa','10/29/2019');
+
+  INSERT INTO OrderItem(order_id,packageNo)
+     VALUES ('0061117','A'),
+		   ('0076311','B'),
+		   ('0534551','F'),
+		   ('1147979','E'),
+		   ('2980816','C'),
+		   ('3678087','E'),
+		   ('3721651','D'),
+		   ('5611515','C'),
+		   ('6600756','E'),
+		   ('7628656','F'),
+		   ('8118492','D'),
+		   ('8314702','A'),
+		   ('8523465','A'),
+		   ('8818232','B');
+
+--Sample SQL--
+--Show all customers purchased package C--
+SELECT CustomerOrder.custId, fName, lName, packageNo
+FROM CustomerOrder, OrderItem, Customer
+WHERE (CustomerOrder.orderId = OrderItem.orderId) AND (packageNo = 'C') AND (Customer.custId = CustomerOrder.custId)
+
+--Show all customers who paid with cash--
+SELECT orderId, Customer.custId, fName, lName, email, phone, payMethod
+FROM Customer, CustomerOrder
+WHERE payMethod = 'cash' AND Customer.custId = CustomerOrder.custId
+
+--Show total number of cash transactions--
+SELECT COUNT (*)
+FROM CustomerOrder
+WHERE payMethod = 'cash'
+
+--Show all customers who's boarding Air Canada--
+SELECT Customer.custId, fName, lName
+FROM Customer, CustomerOrder, OrderItem, Package, Flight
+WHERE Customer.custId = CustomerOrder.custId AND CustomerOrder.orderId = OrderItem.orderId AND Package.packageNo = OrderItem.packageNo AND Flight.flightNo = Package.flightNo AND airline = 'Air Canada'
+
+--List all customer with ascending age--
+SELECT custId, fname, lname, age
+FROM Customer
+ORDER BY age ASC
+
+--order history within 3 months--
+SELECT orderId, Customer.custId, fname, lname, orderDate
+FROM CustomerOrder, Customer
+WHERE Customer.custId = CustomerOrder.custId AND orderDate > now() - interval '3 months'
+
+--Most popular destination--
+SELECT destination, COUNT(*)
+FROM Package, OrderItem
+WHERE OrderItem.packageNo = Package.packageNo
+GROUP BY destination
+ORDER BY count(Package.*) DESC LIMIT 1
